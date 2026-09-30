@@ -1,0 +1,440 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        80,
+        -2208
+      ],
+      "id": "c1b45e2c-0915-46be-b4ce-9b0b6abeec37",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XEsZrMhycsYH15ct",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-3.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-3.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "={{ $json.From }}\n{{ $json.Subject }}\n{{ $json.toJsonString() }}\n{{ $json.snippet }}\nClassify the following incoming email into strictly JSON format. Do not add any conversational text or explanation.\n\nEmail Subject: {{ $json.subject }}\nEmail Body: {{ $json.text }}\n\nOutput JSON Format:\n{\n  \"category\": \"Sales | Support | Spam\",\n  \"priority\": \"High | Medium | Low\",\n  \"summary\": \"1-sentence summary\",\n  \"suggested_reply\": \"Professional 2-line response\"\n}\nDo not add any text,signature and role just follow the given json format",
+              "role": "model"
+            },
+            {}
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        -2080
+      ],
+      "id": "7c1f616f-1dd5-44d0-98c7-ab8f1e103473",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "mTtDoeZALg67JYUn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app1ut3qE0DTfpmhL",
+          "mode": "list",
+          "cachedResultName": "Lead & Prospect CRM",
+          "cachedResultUrl": "https://airtable.com/app1ut3qE0DTfpmhL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblNpJIQTZ7AFPlwo",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/app1ut3qE0DTfpmhL/tblNpJIQTZ7AFPlwo"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "category": "={{ $json.category }}",
+            "priority": "={{ $json.priority }}",
+            "Summary": "={{ $json.summary }}",
+            "draft reply": "={{ $json.suggested_reply }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Sender Email",
+              "displayName": "Sender Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "category",
+              "displayName": "category",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "priority",
+              "displayName": "priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "draft reply",
+              "displayName": "draft reply",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Attachment Summary",
+              "displayName": "Attachment Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        -2272
+      ],
+      "id": "21fdc51e-93ba-4de4-b47a-d1c7a58ba80d",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "IM0KbzdCDjLL90ir",
+          "name": "Airtable Personal Access Token account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6f243901-dd6d-4990-83c5-becea3ede6a3",
+              "leftValue": "={{ $json.category }}",
+              "rightValue": "Sales",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        480,
+        -2128
+      ],
+      "id": "aa7c4ea8-3263-4e52-a390-612372fe0262",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Gemini ka sara data string bana kar direct JSON object nikalna\nconst inputObj = $input.first().json;\n\n// Gemini ke mukhtalif structures ko safely target karein:\nlet textContent = \n  inputObj.parts?.[1]?.text || \n  inputObj.parts?.[0]?.text || \n  inputObj.content?.parts?.[1]?.text || \n  inputObj.content?.parts?.[0]?.text || \n  inputObj.candidates?.[0]?.content?.parts?.[0]?.text ||\n  JSON.stringify(inputObj);\n\n// Regex se '{' se lekar '}' tak ka saaf JSON nikal lein\nconst jsonMatch = textContent.match(/\\{[\\s\\S]*\\}/);\n\nif (jsonMatch) {\n  return JSON.parse(jsonMatch[0]);\n} else {\n  throw new Error(\"No JSON found in text: \" + textContent);\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -2240
+      ],
+      "id": "4d7c2538-f206-404d-a674-4288e53de113",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').item.json.From }}",
+        "subject": "={{ $('Gmail Trigger').item.json.Subject }}",
+        "message": "={{ $('Code in JavaScript').item.json.suggested_reply }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1056,
+        -2272
+      ],
+      "id": "c9acb99f-687e-4b0b-a8f8-1726b282ec94",
+      "name": "Send a message",
+      "webhookId": "13b797f5-16f2-45d5-a20c-61a1340160bc",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XEsZrMhycsYH15ct",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "44b98603-fe30-4f16-b0d7-213ef87ce60e",
+              "leftValue": "={{ $('Code in JavaScript').item.json.category }}",
+              "rightValue": "Support",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        640,
+        -2048
+      ],
+      "id": "a4f6843d-8f03-4de3-ac78-95b0fd9f8bc2",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').item.json.From }}",
+        "subject": "=Re: {{ $('Gmail Trigger').item.json.Subject }}   ",
+        "message": "=Hello,  We have received your support inquiry regarding: \"{{ $('Gmail Trigger').item.json.subject }}\".  Our support team is reviewing it and will get back to you within 24 hours.  Summary of request: {{ $('Code in JavaScript').item.json.summary }}  Best regards, Support Team",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        -1968
+      ],
+      "id": "dc426974-965d-4c10-8b02-3fc3fcdd1f83",
+      "name": "Send a message1",
+      "webhookId": "f5a503d6-b84c-4c9f-92bf-9eb1f7518e36",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XEsZrMhycsYH15ct",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": "={{ $('Gmail Trigger').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        -2096
+      ],
+      "id": "9ea9f5a8-91ab-4f45-93a9-347e84f800e3",
+      "name": "Add label to message",
+      "webhookId": "e63e9557-f7e6-4877-9d51-118086cd3084",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XEsZrMhycsYH15ct",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Add label to message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "7c57a633-112d-41b7-bea6-060571844111",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7f0297de6c980687b6e8715dd0cecd4ce1050500cd4bcfd1fdac751dd32b37c8"
+  },
+  "nodeGroups": [],
+  "id": "KZUgSH0Ackofr5cK",
+  "tags": []
+}
